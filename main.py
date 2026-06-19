@@ -1,30 +1,22 @@
-from crewai import Agent, Task, Crew, LLM
+from core.planner import create_plan
+from agents.developer import develop
+from agents.reviewer import review
+from tools.project_builder import build_project
 
-llm = LLM(
-    model="ollama/qwen3:8b",
-    base_url="http://localhost:11434"
-)
+task = input("작업 입력 : ")
 
-developer = Agent(
-    role="Python Developer",
-    goal="Write Python code",
-    backstory="Senior Python developer.",
-    llm=llm,
-    verbose=True
-)
+print("\n[1] 계획 생성")
+plan = create_plan(task)
+print(plan)
 
-task = Task(
-    description="Write a Python program that prints Hello World.",
-    expected_output="Python code",
-    agent=developer,
-)
+print("\n[2] 코드 생성")
+code = develop(plan)
 
-crew = Crew(
-    agents=[developer],
-    tasks=[task],
-    verbose=True,
-)
+print("\n[3] 코드 리뷰")
+review_result = review(code)
+print(review_result)
 
-result = crew.kickoff()
+print("\n[4] 프로젝트 생성")
+build_project("output_project")
 
-print(result)
+print("\n✅ AICompany 작업 완료")

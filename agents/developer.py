@@ -1,11 +1,11 @@
-from crewai import Agent
+from core.engine import engine
 
-developer = Agent(
-    role="Senior Python Developer",
-    goal="Write clean, production-ready Python code.",
-    backstory=(
-        "You are a senior software engineer specialized "
-        "in AI automation and backend systems."
-    ),
-    verbose=True
-)
+
+def develop(plan):
+    prompt = f"""
+다음 계획을 코드로 구현해라.
+
+{plan}
+"""
+
+    return engine.run("Developer", prompt)
